@@ -1,0 +1,19 @@
+{
+    "name": "purelib/framework",
+    "require": {
+        "purelib/di": "dev-master"
+        , "pimple/pimple": "2.0.*@dev"
+        , "symfony/http-foundation": "2.4.0"
+        , "symfony/routing": "2.4.0"
+        , "symfony/http-kernel": "2.4.0"
+        , "zendframework/zend-eventmanager": "2.2.*@dev"
+    }
+    ,"require-dev":{
+        "chriskite/phactory": "dev-master"
+    }
+    , "autoload": {
+        "psr-4": {
+            "PureLib\\Framework\\": "src/"
+        }
+    }
+}
