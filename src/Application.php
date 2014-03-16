@@ -73,6 +73,16 @@ class Application
                                 $this->get('response')->setStatusCode(404, 'not found page');
                             });
     }
+    
+    protected static $instans = array();
+    
+    public function setName($name) {
+        self::$instans[$name] = $this;
+    }
+    
+    public function instance($name='main') {
+        return isset(self::$instans[$name]) ? self::$instans[$name] : false;
+    } 
 
     public function set($name, $value)
     {
