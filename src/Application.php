@@ -14,6 +14,9 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 class Application
 {
+    protected static $instans = array();
+    protected static $defaultApp;
+
     protected $container;
 
     public function __construct(array $config=array(), \PureLib\Di\DiInterface $container=null, $eventManager=null, $request=null, $response=null)
@@ -60,11 +63,11 @@ class Application
                     call_user_func_array($callback, $args);
                     $this->get('response')->setContent(ob_get_clean());
                 });
-                    	
+                     
                     $this->on('bootstrapAfter', function ($e) {
                         $e->getTarget()->get('response')->send();
                     } );
-                        	
+                         
                         $this->on('route', function ($e) {
                             $this->matchRoute();
                         });
@@ -72,17 +75,27 @@ class Application
                             $this->on('unmatchroute', function($e) {
                                 $this->get('response')->setStatusCode(404, 'not found page');
                             });
+                            
+                            if (self::$defaultApp === null) {
+                                self::$defaultApp = 'main';
+                                $this->setName('main', true);
+                            }
     }
-    
-    protected static $instans = array();
-    
-    public function setName($name) {
+
+    public function setName($name, $default=false) {
         self::$instans[$name] = $this;
+        if ($default) {
+            self::$defaultApp = $name;
+        }
     }
-    
-    public function instance($name='main') {
+
+    public static function instance($name=null) {
+        if ($name ===  null) {
+            $name = self::$defaultApp;
+        }
+
         return isset(self::$instans[$name]) ? self::$instans[$name] : false;
-    } 
+    }
 
     public function set($name, $value)
     {
